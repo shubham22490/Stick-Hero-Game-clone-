@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.game.ap_project.Controller">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="165.0" prefWidth="540.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="50.0">
+               <font>
+                  <Font size="56.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hold space bar to stretch out the stick." textAlignment="CENTER" wrappingWidth="200.0">
+               <font>
+                  <Font name="DejaVu Serif" size="15.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      <AnchorPane prefHeight="831.0" prefWidth="540.0">
+         <children>
+            <Rectangle fx:id="currentBox" arcHeight="5.0" arcWidth="5.0" height="471.0" layoutY="364.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="132.0" />
+            <Rectangle fx:id="nextBox" arcHeight="5.0" arcWidth="5.0" height="471.0" layoutX="353.0" layoutY="364.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="150.0" />
+            <Rectangle fx:id="centerBox" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="7.0" layoutX="420.0" layoutY="364.0" stroke="BLACK" strokeType="INSIDE" width="17.0" />
+            <ImageView fx:id="hero" fitHeight="59.0" fitWidth="50.0" layoutX="82.0" layoutY="305.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@hero.png" />
+               </image>
+            </ImageView>
+            <Rectangle fx:id="stick" arcHeight="5.0" arcWidth="5.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="7.0" x="125.0" AnchorPane.bottomAnchor="471.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
