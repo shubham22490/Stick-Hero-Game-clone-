@@ -9,6 +9,8 @@ module com.game.ap_project {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.datatransfer;
+    requires java.desktop;
 
     opens com.game.ap_project to javafx.fxml;
     exports com.game.ap_project;
