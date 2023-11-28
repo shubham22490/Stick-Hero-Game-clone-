@@ -1,6 +1,7 @@
 package com.game.ap_project;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Color;
 
 public class StickFigure {
     private int x;          // X-coordinate of the stick figure

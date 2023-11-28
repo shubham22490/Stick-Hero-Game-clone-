@@ -1,13 +1,18 @@
 package com.game.ap_project;
 
-import java.awt.*;
+//import java.awt.*;
+
+import javafx.animation.RotateTransition;
+import javafx.scene.transform.Rotate;
 
 public class Stick {
-    private int length;    // Length of the stick
+    private static int length = 0;    // Length of the stick
     private int angle;     // Angle of rotation
     private int xEnd;      // X-coordinate of the stick's end
     private int yEnd;      // Y-coordinate of the stick's end
     private boolean falling;  // Flag to indicate if the stick is falling
+
+    private final int MULTIPLIER = 7;
 
     // Constructor to initialize stick properties
     public Stick() {
@@ -19,9 +24,21 @@ public class Stick {
     }
 
     // Method to increase the height of the stick
-    public void increaseHeight(int amount) {
-        length += amount;
+    public void increaseHeight(Controller controller) {
+        if(length < 400 - MULTIPLIER) length += MULTIPLIER;
+        controller.setStickHeight(length);
     }
+
+    public void fall(Controller controller){
+        Rotate rotate = new Rotate();
+        rotate.setPivotX(95);
+        rotate.setPivotY(this.length);
+        rotate.setAngle(90);
+
+        controller.stickFall(rotate);
+    }
+
+
 
     // Method to rotate and fall the stick on the pillar (animation)
     public void rotateAndFall() {
@@ -46,7 +63,7 @@ public class Stick {
 
     // Method to check if the length is correct for landing on the tower
     public boolean isCorrect(int towerWidth, int gap) {
-        return length <= towerWidth && length >= gap;
+        return length <= towerWidth + gap && length >= gap;
     }
 
     // Method to check if the length is perfect for an extra score
