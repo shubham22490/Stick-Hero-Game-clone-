@@ -1,71 +1,78 @@
 package com.game.ap_project;
 
-import java.awt.*;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+
+import java.net.URISyntaxException;
 
 public class Stick {
-    private int length;    // Length of the stick
-    private int angle;     // Angle of rotation
-    private int xEnd;      // X-coordinate of the stick's end
-    private int yEnd;      // Y-coordinate of the stick's end
-    private boolean falling;  // Flag to indicate if the stick is falling
+    private static int length = 0;    // Length of the stick
+    private static int MULTIPLIER = 10;
+    private final int MAXLENGTH = 450;
 
     // Constructor to initialize stick properties
     public Stick() {
-        this.length = 0;
-        this.angle = 0;
-        this.xEnd = 0;
-        this.yEnd = 0;
-        this.falling = false;
+        length = 0;
     }
 
     // Method to increase the height of the stick
-    public void increaseHeight(int amount) {
-        length += amount;
+    public void increaseHeight(GameController controller) throws URISyntaxException {
+        if(length < MAXLENGTH - MULTIPLIER) length += MULTIPLIER;
+        controller.setStickHeight(length);
     }
 
-    // Method to rotate and fall the stick on the pillar (animation)
-    public void rotateAndFall() {
-        if (!falling) {
-            falling = true;
-            for (int i = 0; i <= 90; i += 5) {
-                angle = i;
-                try {
-                    Thread.sleep(20);  // Add a slight delay for animation effect
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    public static void resetLength(){
+        length = 0;
+    }
+
+    public void fall(GameController controller) throws InterruptedException, URISyntaxException {
+        Rotate rotate = new Rotate();
+        rotate.setPivotX(controller.getStick().getX());
+        rotate.setPivotY(controller.getStick().getY() + controller.getStick().getHeight());
+        rotate.setAngle(90);
+
+        controller.stickFall(rotate, isPerfect(controller));
+    }
+
+
+    public int getScore(GameController controller){
+        int score = 0;
+        if(isCorrect(controller)){
+            score++;
+            if(isPerfect(controller)){
+                score++;
             }
         }
-    }
-
-    // Method to create the stick
-    public void createStick(int xStart, int yStart) {
-        xEnd = xStart + length * (int) Math.cos(Math.toRadians(angle));
-        yEnd = yStart - length * (int) Math.sin(Math.toRadians(angle));
+        return score;
     }
 
     // Method to check if the length is correct for landing on the tower
-    public boolean isCorrect(int towerWidth, int gap) {
-        return length <= towerWidth && length >= gap;
+    public boolean isCorrect(GameController controller) {
+        Rectangle next = controller.getPillar(0);
+        int gap = (int)next.getX() - 95;
+        int towerWidth = (int)next.getWidth();
+        return length <= towerWidth + gap && length >= gap;
+
     }
 
     // Method to check if the length is perfect for an extra score
-    public boolean isPerfect(int perfectLength) {
-        return length == perfectLength;
+    public boolean isPerfect(GameController controller) {
+        Rectangle tower = controller.getPillar(0);
+        int towerWidth = (int) tower.getWidth();
+        System.out.println("Length: " + length);
+        int gap = (int)tower.getX() - 95;
+        System.out.println("Equal to: " + gap + towerWidth / 2);
+        return length >= gap + (towerWidth / 2) - 5 && length <= gap + (towerWidth/2) + 5;
     }
 
-    // Getter method for the x-coordinate of the stick's end
-    public int getXEnd() {
-        return xEnd;
+    public void setDifficulty(String difficulty){
+        switch (difficulty){
+            case "Medium" -> MULTIPLIER = 15;
+            case "Hard" -> MULTIPLIER = 20;
+            default -> MULTIPLIER = 10;
+        }
+
+        System.out.println(MULTIPLIER);
     }
 
-    // Getter method for the y-coordinate of the stick's end
-    public int getYEnd() {
-        return yEnd;
-    }
-
-    // Getter method for the falling flag
-    public boolean isFalling() {
-        return falling;
-    }
 }

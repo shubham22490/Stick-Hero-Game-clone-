@@ -1,0 +1,77 @@
+#homePane{
+    -fx-background-image: url("../home.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+
+}
+
+/* .text{
+} */
+
+.combo-box{
+    -fx-background-radius: 7px;
+    -fx-background-color: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    /* -fx-padding: 2px; */
+    -fx-border-width: 0.5px;
+    -fx-border-radius: 7px;
+    -fx-border-insets: 0px .5px .5px 0px;
+    -fx-border-color: black;
+    -fx-border-color: #acacac;
+    -fx-content-display: center;
+}
+
+#difficulty .arrow-button {
+    -fx-background-color: #f2f2f2;
+}
+
+.combo-box .list-view .list-cell{
+    -fx-text-fill: #3b5367;
+}
+
+.combo-box .list-cell{
+    -fx-text-fill: #3b5367;
+}
+
+.combo-box .list-view .list-cell:focused {
+    -fx-background-color : #3b5367; 
+    -fx-text-fill: white;
+}
+  
+  /* combo-box hover text */
+.combo-box .list-view .list-cell:hover {
+    -fx-background-color : #3b5367;  /* Cadet Blue */
+    -fx-text-fill: white;
+}
+
+.rectangle{
+    -fx-background-color: black;
+}
+
+#musicController {
+    -fx-background-color: radial-gradient(focus-distance 0% , center 50% 50% , radius 55% , #e6e6e6 , #fff);
+    -fx-background-radius: 7px;
+}
+
+#musicController .button{
+    -fx-padding: 15px 10px;
+    -fx-border-insets: 10px 0px;
+    -fx-background-insets: 10px 0px;
+    -fx-border-radius: 20px;
+    -fx-background-color: #3b5367;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.slider{
+    -fx-padding: 10px 20px 10px 20px;
+    -fx-border-insets: 10px 20px 10px 20px;
+    -fx-background-insets: 10px 20px 10px 20px;
+}
+
+.slider .track{
+    -fx-background-color: linear-gradient(to right, #2D819D 0%, #969696 0%);
+}

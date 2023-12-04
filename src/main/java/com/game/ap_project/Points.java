@@ -1,20 +1,30 @@
 package com.game.ap_project;
 
 public class Points {
-    private int gamePoints;     // Regular game points
+    private static int gamePoints = 0;     // Regular game points
     private int cherryPoints;   // Points earned from cherries
-    private int highScore;      // High score
+    private static int highScore = 0;      // High score
 
     // Constructor to initialize points
     public Points() {
-        this.gamePoints = 0;
         this.cherryPoints = 0;
-        this.highScore = 0;
     }
 
     // Method to add regular game points
-    public void addGamePoints(int points) {
+    public static void addGamePoints(GameController controller, int points) {
         gamePoints += points;
+        controller.getScore().setText(String.valueOf(gamePoints));
+    }
+
+    public static void setHighScore(int points){
+        if(points > highScore){
+            highScore = points;
+        }
+    }
+
+    public static int getHighScore(){
+
+        return highScore;
     }
 
     // Method to add points earned from cherries
@@ -32,15 +42,4 @@ public class Points {
         return cherryPoints;
     }
 
-    // Method to set the high score
-    public void setHighScore() {
-        if (gamePoints > highScore) {
-            highScore = gamePoints;
-        }
-    }
-
-    // Method to get the high score
-    public int getHighScore() {
-        return highScore;
-    }
 }

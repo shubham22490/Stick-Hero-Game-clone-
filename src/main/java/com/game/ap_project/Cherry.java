@@ -1,73 +1,59 @@
 package com.game.ap_project;
 
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
+
 import java.awt.*;
 import java.util.Random;
 
 public class Cherry {
-    private boolean isVisible;  // Flag to indicate if the cherry is visible
-    private int x;              // X-coordinate of the cherry
-    private int y;              // Y-coordinate of the cherry
 
-    // Constructor to initialize cherry properties
-    public Cherry() {
-        this.isVisible = true;  // Cherry is initially visible
-        this.x = 0;
-        this.y = 0;
-    }
+    private static int count = 0;
+    private static int y = 0;
 
     // Method to check if a cherry is possible in the width
-    public boolean isCherry(int towerWidth, double probability) {
-        return Math.random() < probability && towerWidth > 0;
+    private static boolean isCherry() {
+        double probability = 0.2;
+        return Math.random() < probability;
     }
 
-    // Method to randomize the cherry if it's possible
-    public void randomizeCherry(int towerX, int towerWidth) {
-        if (isCherry(towerWidth, 0.2)) { // 0.2 is the probability of cherry appearance
-            x = getCord(towerX, towerWidth);
-            y = 400;  // Assuming a fixed height for the towers
-        } else {
-            isVisible = false; // Cherry is not visible if it's not present
+    private static int getY(GameController controller, int cherry){
+        Random rand = new Random();
+        //True means above the platform and False means below the platform
+        boolean state = rand.nextInt(2) == 1;
+        if(state){
+            y = 490 - (int)controller.getCherry(cherry).getFitHeight();
+        } else{
+            y = 490 + 20;
         }
-    }
-
-    // Method to set the cherry as hidden
-    public void setHidden() {
-        isVisible = false;
-    }
-
-    // Method to hide the cherry if the hero touches it
-    public void hideIfTouched(int heroX, int heroY, int heroHeight) {
-        if (isVisible && heroX >= x - 10 && heroX <= x + 10 && heroY - heroHeight <= y && heroY >= y - 20) {
-            isVisible = false;
-        }
-    }
-
-    // Method to get random coordinates to place the cherry
-    private int getCord(int towerX, int towerWidth) {
-        Random random = new Random();
-        return towerX + random.nextInt(towerWidth);
-    }
-
-    // Main user function to check if the cherry is placed
-    public boolean getPlaced() {
-        return isVisible;
-    }
-
-    // Getter method for the x-coordinate of the cherry
-    public int getX() {
-        return x;
-    }
-
-    // Getter method for the y-coordinate of the cherry
-    public int getY() {
         return y;
     }
 
-    // Method to draw the cherry on the screen
-    public void draw(Graphics g) {
-        if (isVisible) {
-            g.setColor(Color.RED);
-            g.fillOval(x - 10, y - 20, 20, 20);
+    public static void addCount(){
+        count++;
+    }
+
+
+    public static void placeCherry(GameController controller, int prev, int cherry){
+        Rectangle pillar = controller.getPillar(prev);
+        Rectangle nextPillar = controller.getPillar(prev + 1);
+        int gap = (int) (nextPillar.getX() - pillar.getX() - pillar.getWidth()) - (int)controller.getCherry(cherry).getFitWidth();
+//        if(isCherry(){
+            Random random = new Random();
+            Cherry.getY(controller, cherry);
+            int x = random.nextInt(gap) + (int)pillar.getX() + (int)pillar.getWidth();
+            controller.getCherry(cherry).setY(y);
+            controller.getCherry(cherry).setX(x);
+//            controller.getCherry(cherry).setVisible(true);
+//        }
+    }
+
+    public static boolean isCollision(GameController controller){
+        ImageView cherry = controller.getCherry(0);
+        if(cherry.isVisible()){
+            ImageView hero = controller.getHero();
+            return hero.getX() <= cherry.getX() + cherry.getFitWidth() && hero.getX() + hero.getFitWidth() >= cherry.getX();
         }
+        return false;
     }
 }

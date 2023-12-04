@@ -1,41 +1,72 @@
 package com.game.ap_project;
 
-import java.awt.*;
+import javafx.scene.shape.Rectangle;
+
+import java.util.Random;
+
+import static java.lang.Math.max;
+
 public class Towers {
-    private int x;       // X-coordinate of the left side of the tower
+//    private int x;       // X-coordinate of the left side of the tower
     private int width;   // Width of the tower
     private int perfectPoint;  // Perfect point for scoring
 
+    private static final int HEIGHT = 470;
+    private static final int MAXWIDTH = 200;
+    private static final int MINWIDTH = 30;
+    private static final int MINGAP = 100;
+
+    private static int screenHeight;
+    private static int screenWidth;
+
+
     // Constructor to initialize tower properties
-    public Towers(int x, int width) {
-        this.x = x;
-        this.width = width;
-        this.perfectPoint = x + width / 2;
+//    public Towers(int x, int width) {
+//        this.x = x;
+//        this.width = width;
+//        this.perfectPoint = x + width / 2;
+//    }
+
+    public static void setSceneHeight(int h){
+        screenHeight = h;
     }
 
-    // Method to draw the tower on the screen
-    public void draw(Graphics g) {
-        g.setColor(Color.BLUE);
-        g.fillRect(x, 0, width, 400); // Assuming a fixed height for the towers
+
+
+    public static  int getHeight() { return HEIGHT; }
+
+    public static void setSceneWidth(int w){
+        screenWidth = w;
     }
 
-    // Method to get the perfect point in the middle of the tower's width
-    public int getPerfectPoint() {
-        return perfectPoint;
+
+    private static void setTower(Rectangle tower, double X, double prevWidth, Rectangle mid){
+        Random random = new Random();
+        int width = random.nextInt(MAXWIDTH - MINWIDTH) + MINWIDTH;
+        int x = random.nextInt(screenWidth - width - MINGAP - max((int)prevWidth, 100)) + (int)prevWidth + (int)X + MINGAP;
+        tower.setX(x);
+        mid.setX(x + width / 2 - 5);
+        tower.setY(screenHeight - HEIGHT);
+        mid.setY(screenHeight - HEIGHT);
+        tower.setWidth(width);
+        mid.setWidth(10);
+        tower.setHeight(HEIGHT);
     }
 
-    // Method to get the gap between two towers
-    public int getGap(Towers nextTower) {
-        return nextTower.getX() - (x + width);
+    public static void setTower(GameController controller, int i){
+        Rectangle prev = controller.getPillar(i);
+        Rectangle next = controller.getPillar(i + 1);
+        setTower(next, prev.getX(), prev.getWidth(), controller.getMid(i+1));
+        System.out.println("Now Placing Cherries.");
+        Cherry.placeCherry(controller, i, i+1);
+
     }
 
-    // Getter method for the width of the tower
-    public int getWidth() {
-        return width;
+    public static void setBasePillar(Rectangle tower, Rectangle mid){
+        Towers.setTower(tower, 0, 100, mid);
+        tower.setX(0);
+        mid.setVisible(false);
+        tower.setWidth(100);
     }
 
-    // Getter method for the x-coordinate of the tower
-    public int getX() {
-        return x;
-    }
 }
