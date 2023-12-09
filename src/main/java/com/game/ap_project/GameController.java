@@ -1,68 +1,139 @@
 package com.game.ap_project;
 
 
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
 public class GameController implements Controller {
 
     @FXML
-    private Rectangle currentPillar;
+    private Button restart;
+
+    @FXML
+    private Text cherryCounter;
+
+    @FXML
+    private ImageView currentCherry;
 
     @FXML
     private Rectangle currentMid;
 
     @FXML
-    private ImageView hero;
+    private Rectangle currentPillar;
 
     @FXML
-    private Rectangle nextPillar;
+    private Text finalBest;
+
+    @FXML
+    private Text finalScore;
+
+    @FXML
+    private AnchorPane gameEnd;
+
+    @FXML
+    private Text helpText;
+
+    @FXML
+    private ImageView stickHero;
+
+    @FXML
+    private Button homeButton;
+
+    @FXML
+    private ImageView nextCherry;
+
+    @FXML
+    private ImageView nextCherry1;
 
     @FXML
     private Rectangle nextMid;
 
     @FXML
+    private Rectangle nextPillar;
+
+    @FXML
     private AnchorPane scene;
 
     @FXML
-    private Rectangle stick;
-    @FXML
-    private ImageView currentCherry;
-    @FXML
-    private ImageView nextCherry;
+    private Text score;
 
     @FXML
-    private Text score;
+    private Rectangle stick;
+
     @FXML
-    private Rectangle upcomingPillar;
+    private Button revive;
 
     @FXML
     private Rectangle upcomingMid;
 
+    @FXML
+    private Rectangle upcomingPillar;
+
     private MediaPlayer player;
+
+    private StackPane root;
+
+    private AnchorPane home;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        String path = Objects.requireNonNull(getClass().getResource("CSS/pillar2.png")).toString();
+        currentPillar.setFill(new ImagePattern(new Image(path)));
+        nextPillar.setFill(new ImagePattern(new Image(path)));
+        upcomingPillar.setFill(new ImagePattern(new Image(path)));
+        stick.setFill(Color.web("#3b5367"));
 
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
+            try {
+                switchScene(home);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        revive.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
+            Cherry.removeCount(this);
+            try {
+                Game.gameScene(this);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        restart.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
+            try {
+                Points.setGamePoints(0);
+                Game.gameScene(this);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     private final String hittingGround = getClass().getResource("fallSound2.mp3").toString();
@@ -72,19 +143,21 @@ public class GameController implements Controller {
     private final String heroFall = getClass().getResource("heroFall.mp3").toString();
 
     public void init(){
+        gameEnd.setVisible(false);
+        stickHero.setVisible(true);
+        score.setText(String.valueOf(Points.getGamePoints()));
+
+        stickHero.setY(490 - stickHero.getFitHeight());
         getCherry(0).setVisible(false);
         getCherry(1).setVisible(false);
         Towers.setSceneHeight((int)scene.getPrefHeight());
         Towers.setSceneWidth((int)scene.getPrefWidth());
         Towers.setBasePillar(currentPillar, currentMid);
         Towers.setTower(this, -1);
+//        getPillar(-1).setX(Math.max(0, currentPillar.getWidth() - 100));
         getCherry(0).setVisible(true);
-//        stickInit();
-        stick.setY(490);
-        stick.setX(95);
-        stick.setWidth(7);
-        stick.setHeight(0);
-        hero.setX(50);
+        stickInit();
+        stickHero.setX(50);
         upcomingMid.setVisible(false);
         currentMid.setVisible(false);
     }
@@ -100,12 +173,16 @@ public class GameController implements Controller {
         return nextCherry;
     }
 
+    public Text getCherryCounter(){
+        return cherryCounter;
+    }
+
+    public void hideText(){
+        helpText.setVisible(false);
+    }
+
     public void stickInit(){
-        Rotate rotate = new Rotate();
-        rotate.setPivotY(490);
-        rotate.setPivotX(95);
-        rotate.setAngle(270);
-        stick.getTransforms().add(rotate);
+        stick.getTransforms().clear();
         Stick.resetLength();
         stick.setWidth(7);
         stick.setHeight(0);
@@ -119,7 +196,25 @@ public class GameController implements Controller {
     }
 
     public ImageView getHero(){
-        return hero;
+        return stickHero;
+    }
+
+    public void settingGameEnd() throws IOException {
+        score.setVisible(true);
+        finalScore.setText(String.valueOf(Points.getGamePoints()));
+        Points.setHighScore(Points.getGamePoints());
+        finalBest.setText(String.valueOf(Points.getHighScore()));
+        gameEnd.setVisible(true);
+        revive.setDisable(false);
+
+        if(Cherry.getCount() < 3) {
+            revive.setDisable(true);
+        }
+
+        root = Game.getMainRoot();
+        home = Game.getHome();
+
+
     }
 
     public Rectangle getPillar(int value){
@@ -143,12 +238,10 @@ public class GameController implements Controller {
                 new KeyFrame(Duration.ZERO, new KeyValue(rotate.angleProperty(), 0)),
                 new KeyFrame(Duration.seconds(0.5), new KeyValue(rotate.angleProperty(), 90)));
         setSound(hittingGround);
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                player.play();
-            }
+        timeline.setOnFinished(event -> {
+            player.play();
         });
+        System.out.println(stick.getTransforms());
         timeline.play();
     }
 
@@ -163,7 +256,7 @@ public class GameController implements Controller {
         keyFrameX(nextMid, delx, timeline);
         keyFrameX(upcomingMid, delx, timeline);
         KeyFrame keyFrame;
-        keyFrame = new KeyFrame(Duration.seconds(0.5), new KeyValue(hero.xProperty(), hero.getX()-delx));
+        keyFrame = new KeyFrame(Duration.seconds(0.5), new KeyValue(stickHero.xProperty(), stickHero.getX()-delx));
         timeline.getKeyFrames().add(keyFrame);
         keyFrame = new KeyFrame(Duration.seconds(0.5), new KeyValue(stick.yProperty(), stick.getY()+delx));
         timeline.getKeyFrames().add(keyFrame);
@@ -175,29 +268,29 @@ public class GameController implements Controller {
         timeline.getKeyFrames().add(keyFrame);
         GameController controller = this;
 
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Rectangle temp = currentPillar;
-                currentPillar = nextPillar;
-                nextPillar = upcomingPillar;
-                upcomingPillar = temp;
-                upcomingPillar.setVisible(false);
-                temp = currentMid;
-                currentMid = nextMid;
-                nextMid = upcomingMid;
-                upcomingMid = temp;
-                ImageView temp2 = getCherry(0);
-                currentCherry = nextCherry;
-                nextCherry = temp2;
-                nextCherry.setVisible(false);
-                currentCherry.setVisible(true);
-                upcomingMid.setVisible(false);
-                currentMid.setVisible(false);
-                nextMid.setVisible(true);
-                stickInit();
-                Points.addGamePoints(controller, 1);
-            }
+        timeline.setOnFinished(event -> {
+            Rectangle temp = currentPillar;
+            currentPillar = nextPillar;
+            nextPillar = upcomingPillar;
+            upcomingPillar = temp;
+            upcomingPillar.setVisible(false);
+            temp = currentMid;
+            currentMid = nextMid;
+            nextMid = upcomingMid;
+            upcomingMid = temp;
+            ImageView temp2 = getCherry(0);
+            currentCherry = nextCherry;
+            nextCherry = temp2;
+            nextCherry.setVisible(false);
+            currentCherry.setVisible(true);
+            upcomingMid.setVisible(false);
+            currentMid.setVisible(false);
+            nextMid.setVisible(true);
+            stickInit();
+            Points.addGamePoints(controller, 1);
+            Game.addStickHandler();
+            Game.removeFlipHandler();
+            StickFigure.setStraigth(this);
         });
 
         timeline.play();
@@ -215,50 +308,52 @@ public class GameController implements Controller {
     }
 
     public void heroFall() throws URISyntaxException {
+        Game.removeFlipHandler();
         int dely = Towers.getHeight();
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(hero.yProperty(), hero.getY())),
-                new KeyFrame(Duration.seconds(0.2), new KeyValue(hero.yProperty(), hero.getY()-40)),
-                new KeyFrame(Duration.seconds(0.8), new KeyValue(hero.yProperty(), hero.getY() + dely + hero.getFitHeight())));
+                new KeyFrame(Duration.ZERO, new KeyValue(stickHero.yProperty(), stickHero.getY())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(stickHero.yProperty(), stickHero.getY()-40)),
+                new KeyFrame(Duration.seconds(0.8), new KeyValue(stickHero.yProperty(), stickHero.getY() + dely + stickHero.getFitHeight())));
         this.setSound(heroFall);
         player.play();
         timeline.setOnFinished(e -> {
-            hero.setVisible(false);
-            stickInit();
+            stickHero.setVisible(false);
+            try {
+                settingGameEnd();
+            } catch (IOException ex) {
+                System.out.println("Error");
+                throw new RuntimeException(ex);
+            }
         });
+        StickFigure.setStraigth(this);
         timeline.play();
 
     }
 
     public void moveHero(int x, boolean val){
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(hero.xProperty(), hero.getX())),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(hero.xProperty(), x))
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(stickHero.xProperty(), stickHero.getX())),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(stickHero.xProperty(), x))
         );
 
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(val) {
-                    try {
-                        setSound(swap);
-                    } catch (URISyntaxException e) {
-                        throw new RuntimeException(e);
-                    }
-                    moveNext();
-                } else {
-                    try {
-                        heroFall();
-                        Rotate rotate = new Rotate();
-                        rotate.setPivotX(stick.getX());
-                        rotate.setPivotY(stick.getY() + stick.getHeight());
-                        rotate.setAngle(90);
-                        stickFall(rotate, false);
-                    } catch (URISyntaxException e) {
-                        throw new RuntimeException(e);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+        timeline.setOnFinished(event -> {
+            if(val) {
+                try {
+                    setSound(swap);
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+                moveNext();
+            } else {
+                try {
+                    Game.gameEnd(this);
+                    Rotate rotate = new Rotate();
+                    rotate.setPivotX(stick.getX());
+                    rotate.setPivotY(stick.getY() + stick.getHeight());
+                    rotate.setAngle(90);
+                    stickFall(rotate, false);
+                } catch (URISyntaxException | InterruptedException | IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -274,11 +369,6 @@ public class GameController implements Controller {
         player.play();
     }
 
-//    public void playPerfect(){
-//        setSound();
-//    }
-
-
 
     public void setSound(String path) throws URISyntaxException {
         player = new MediaPlayer(new Media(path));
@@ -286,4 +376,21 @@ public class GameController implements Controller {
     }
 
 
+    @Override
+    public void switchScene(Parent pane) throws IOException {
+        root.getChildren().add(pane);
+        pane.translateXProperty().set(scene.getWidth());
+
+        Timeline timeline = new Timeline();
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), new KeyValue(pane.translateXProperty(), 0, Interpolator.EASE_OUT));
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.setOnFinished(e -> {
+            root.getChildren().remove(scene);
+        });
+        timeline.play();
+    }
+
+    public AnchorPane getScene() {
+        return scene;
+    }
 }

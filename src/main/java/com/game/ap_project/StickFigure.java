@@ -1,20 +1,25 @@
 package com.game.ap_project;
 
 
+import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Transform;
 
 public class StickFigure {
-    private boolean flipped; // Flag to indicate if the stick figure is flipped
+    private static boolean flipped; // Flag to indicate if the stick figure is flipped
 
     // Constructor to initialize stick figure properties
     public StickFigure() {
-        this.flipped = false;
+        flipped = false;
     }
 
 
 
     // Method to move the stick figure horizontally
-    public void move(GameController controller, boolean value) {
+    public static void move(GameController controller, boolean value) {
         int dest = 0;
         if(value){
             Rectangle tower = controller.getPillar(0);
@@ -26,42 +31,38 @@ public class StickFigure {
         controller.moveHero(dest, value);
     }
 
-//     Method to make the stick figure fall (move vertically down)
-//    public void fall() {
-//        y += deltaY;
-//    }
+    public static void setStraigth(GameController controller){
+        if(flipCheck()){
+            flip(controller);
+        }
+    }
 
     // Method to flip the stick figure
-    public void flip() {
-        flipped = true;
+    public static void flip(GameController controller) {
+        ImageView hero = controller.getHero();
+        if(!flipped){
+//            Rotate rotate = new Rotate();
+//            rotate.setAxis(Rotate.X_AXIS);
+//            rotate.setAngle(180);
+//            hero.getTransforms().add(rotate);
+            Scale scale = new Scale(1, -1);
+            hero.getTransforms().add(scale);
+            System.out.println(hero.getTransforms());
+//            hero.setY(hero.getY() - 2 * hero.getFitHeight());
+//            System.out.println(hero.getTransforms());
+//            System.out.println(hero.isVisible());
+
+            flipped = true;
+        } else {
+            hero.getTransforms().clear();
+//            hero.setY(hero.getY() + 2* hero.getFitHeight());
+            flipped = false;
+        }
     }
 
     // Method to check if the stick figure is flipped
-    public boolean flipCheck() {
+    public static boolean flipCheck() {
         return flipped;
     }
 
-    // Method to draw the stick figure on the screen
-//    public void draw(Graphics g) {
-//        g.setColor(Color.BLACK);
-//        if (!flipped) {
-//            g.drawLine(x, y, x, y - height); // Body
-//            g.drawLine(x, y - height, x - height, y - height * 2); // Left leg
-//            g.drawLine(x, y - height, x + height, y - height * 2); // Right leg
-//        } else {
-//            g.drawLine(x, y, x, y + height); // Flipped body
-//            g.drawLine(x, y + height, x - height, y + height * 2); // Flipped left leg
-//            g.drawLine(x, y + height, x + height, y + height * 2); // Flipped right leg
-//        }
-//    }
-
-//    // Getter method for the x-coordinate of the stick figure
-//    public int getX() {
-//        return x;
-//    }
-//
-//    // Getter method for the y-coordinate of the stick figure
-//    public int getY() {
-//        return y;
-//    }
 }
