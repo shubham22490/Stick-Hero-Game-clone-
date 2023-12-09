@@ -69,10 +69,10 @@ public class GameController implements Controller {
     private ImageView nextCherry;
 
     @FXML
-    private ImageView nextCherry1;
+    private Rectangle nextMid;
 
     @FXML
-    private Rectangle nextMid;
+    private Text perfect;
 
     @FXML
     private Rectangle nextPillar;
@@ -121,7 +121,7 @@ public class GameController implements Controller {
             Cherry.removeCount(this);
             try {
                 Game.gameScene(this);
-            } catch (IOException ex) {
+            } catch (IOException | InterruptedException | URISyntaxException ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -130,10 +130,23 @@ public class GameController implements Controller {
             try {
                 Points.setGamePoints(0);
                 Game.gameScene(this);
-            } catch (IOException ex) {
+            } catch (IOException | InterruptedException | URISyntaxException ex) {
                 throw new RuntimeException(ex);
             }
         });
+    }
+
+    public void setPerfect(){
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(perfect.visibleProperty(), false, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(0.3), new KeyValue(perfect.yProperty(), perfect.getY()+50, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(0.3), new KeyValue(perfect.visibleProperty(), true, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(0.8), new KeyValue(perfect.yProperty(), perfect.getY(), Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(0.8), new KeyValue(perfect.visibleProperty(), true, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(perfect.yProperty(), perfect.getY()-50, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(perfect.visibleProperty(), false, Interpolator.EASE_OUT)));
+
+        timeline.play();
     }
 
     private final String hittingGround = getClass().getResource("fallSound2.mp3").toString();
@@ -145,9 +158,12 @@ public class GameController implements Controller {
     public void init(){
         gameEnd.setVisible(false);
         stickHero.setVisible(true);
-        score.setText(String.valueOf(Points.getGamePoints()));
-
+        stickHero.setX(50);
         stickHero.setY(490 - stickHero.getFitHeight());
+        score.setText(String.valueOf(Points.getGamePoints()));
+        perfect.setVisible(false);
+        perfect.setY(250);
+
         getCherry(0).setVisible(false);
         getCherry(1).setVisible(false);
         Towers.setSceneHeight((int)scene.getPrefHeight());
@@ -155,9 +171,8 @@ public class GameController implements Controller {
         Towers.setBasePillar(currentPillar, currentMid);
         Towers.setTower(this, -1);
 //        getPillar(-1).setX(Math.max(0, currentPillar.getWidth() - 100));
-        getCherry(0).setVisible(true);
+        getCherry(1).setVisible(true);
         stickInit();
-        stickHero.setX(50);
         upcomingMid.setVisible(false);
         currentMid.setVisible(false);
     }
@@ -233,12 +248,17 @@ public class GameController implements Controller {
 
 
     public void stickFall(Rotate rotate, boolean isPerfect) throws InterruptedException, URISyntaxException {
+        stick.getTransforms().clear();
         stick.getTransforms().add(rotate);
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(rotate.angleProperty(), 0)),
                 new KeyFrame(Duration.seconds(0.5), new KeyValue(rotate.angleProperty(), 90)));
         setSound(hittingGround);
         timeline.setOnFinished(event -> {
+            Game.addFlipHandler();
+            if(isPerfect){
+                setPerfect();
+            }
             player.play();
         });
         System.out.println(stick.getTransforms());
@@ -287,10 +307,13 @@ public class GameController implements Controller {
             currentMid.setVisible(false);
             nextMid.setVisible(true);
             stickInit();
-            Points.addGamePoints(controller, 1);
-            Game.addStickHandler();
+            Game.getLock().lock();
+            if(Game.isGameStatus()){
+                Points.addGamePoints(controller, 1);
+                Game.addStickHandler();
+            }
+            Game.getLock().unlock();
             Game.removeFlipHandler();
-            StickFigure.setStraigth(this);
         });
 
         timeline.play();
@@ -327,7 +350,6 @@ public class GameController implements Controller {
         });
         StickFigure.setStraigth(this);
         timeline.play();
-
     }
 
     public void moveHero(int x, boolean val){
@@ -347,12 +369,7 @@ public class GameController implements Controller {
             } else {
                 try {
                     Game.gameEnd(this);
-                    Rotate rotate = new Rotate();
-                    rotate.setPivotX(stick.getX());
-                    rotate.setPivotY(stick.getY() + stick.getHeight());
-                    rotate.setAngle(90);
-                    stickFall(rotate, false);
-                } catch (URISyntaxException | InterruptedException | IOException e) {
+                } catch (URISyntaxException | IOException e) {
                     throw new RuntimeException(e);
                 }
             }
