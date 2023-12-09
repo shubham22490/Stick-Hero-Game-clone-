@@ -30,9 +30,10 @@ public class Cherry {
         return y;
     }
 
-    public static void addCount(GameController controller){
+    public static int addCount(GameController controller){
         count++;
         controller.getCherryCounter().setText(String.valueOf(count));
+        return count;
     }
 
     public static void removeCount(GameController controller){

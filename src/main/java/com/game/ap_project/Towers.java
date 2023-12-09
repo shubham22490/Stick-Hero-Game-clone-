@@ -20,6 +20,11 @@ public class Towers {
     private static int screenHeight;
     private static int screenWidth;
 
+    public static int getMinGap() {
+        return MINGAP;
+    }
+
+
 
     // Constructor to initialize tower properties
 //    public Towers(int x, int width) {
