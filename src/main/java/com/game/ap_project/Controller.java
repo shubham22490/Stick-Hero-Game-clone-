@@ -11,6 +11,10 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
+/**
+ * Observer Design Pattern: Used to distribute the Functionalities across classes.
+ */
+
 public interface Controller extends Initializable {
     void switchScene(Parent pane) throws IOException;
 }

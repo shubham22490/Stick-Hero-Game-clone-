@@ -1,19 +1,27 @@
 package com.game.ap_project;
 
 
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Transform;
 
+
+/**
+ * Used Singleton design pattern to have a single global instance of the stick figure instance.
+ */
 public class StickFigure {
     private static boolean flipped; // Flag to indicate if the stick figure is flipped
+    private static StickFigure instance;
 
     // Constructor to initialize stick figure properties
-    public StickFigure() {
+    private StickFigure() {
         flipped = false;
+    }
+
+    public static StickFigure getInstance(){
+        if(instance == null){
+            instance = new StickFigure();
+        }
+        return instance;
     }
 
 
@@ -27,8 +35,12 @@ public class StickFigure {
         } else{
             dest = (int)controller.getStick().getHeight() + 70;
         }
-        System.out.println(dest);
+        System.out.println("Distance to Move: " + dest);
         controller.moveHero(dest, value);
+    }
+
+    public static void reset(){
+        flipped = false;
     }
 
     public static void setStraigth(GameController controller){
@@ -40,22 +52,23 @@ public class StickFigure {
     // Method to flip the stick figure
     public static void flip(GameController controller) {
         ImageView hero = controller.getHero();
+        System.out.println("Flipped Called.");
         if(!flipped){
 //            Rotate rotate = new Rotate();
 //            rotate.setAxis(Rotate.X_AXIS);
 //            rotate.setAngle(180);
 //            hero.getTransforms().add(rotate);
-            Scale scale = new Scale(1, -1);
-            hero.getTransforms().add(scale);
+//            Scale scale = new Scale(1, -1);
+//            hero.getTransforms().add(scale);
             System.out.println(hero.getTransforms());
-//            hero.setY(hero.getY() - 2 * hero.getFitHeight());
+            hero.setY(hero.getY() + hero.getFitHeight());
 //            System.out.println(hero.getTransforms());
 //            System.out.println(hero.isVisible());
 
             flipped = true;
         } else {
             hero.getTransforms().clear();
-//            hero.setY(hero.getY() + 2* hero.getFitHeight());
+            hero.setY(hero.getY() - hero.getFitHeight());
             flipped = false;
         }
     }
