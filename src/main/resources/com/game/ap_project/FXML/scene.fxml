@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="scene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.game.ap_project.GameController">
+   <children>
+      <Rectangle fx:id="stick" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="7.0" />
+      <Rectangle fx:id="currentPillar" arcHeight="5.0" arcWidth="5.0" height="470.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="100.0" />
+      <Text fx:id="score" layoutX="162.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="217.0">
+         <font>
+            <Font name="DejaVu Sans Bold" size="56.0" />
+         </font>
+      </Text>
+      <Text fx:id="helpText" layoutX="120.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hold space bar to stretch out the stick." textAlignment="CENTER" wrappingWidth="300.0">
+         <font>
+            <Font name="DejaVu Serif" size="15.0" />
+         </font>
+      </Text>
+      <Rectangle fx:id="nextPillar" arcHeight="5.0" arcWidth="5.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Rectangle fx:id="upcomingPillar" arcHeight="5.0" arcWidth="5.0" height="470.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="100.0" />
+      <Rectangle fx:id="nextMid" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="20.0" />
+      <ImageView fx:id="stickHero" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../hero.png" />
+         </image>
+      </ImageView>
+      <Rectangle fx:id="upcomingMid" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="20.0" />
+      <Rectangle fx:id="currentMid" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="20.0" />
+      <ImageView fx:id="currentCherry" fitHeight="41.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../cherry.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="nextCherry" fitHeight="41.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../cherry.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="nextCherry1" fitHeight="29.0" fitWidth="30.0" layoutX="496.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../cherry.png" />
+         </image>
+      </ImageView>
+      <Text fx:id="cherryCounter" layoutX="431.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="RIGHT" wrappingWidth="54.05126953125">
+         <font>
+            <Font name="DejaVu Sans Mono" size="20.0" />
+         </font>
+      </Text>
+      <AnchorPane fx:id="gameEnd" prefHeight="200.0" prefWidth="200.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="960.0" opacity="0.67" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="540.0" />
+            <Text fill="WHITE" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME OVER!" textAlignment="CENTER" wrappingWidth="540.0">
+               <font>
+                  <Font name="DejaVu Sans Condensed Bold" size="68.0" />
+               </font>
+            </Text>
+            <Button fx:id="homeButton" layoutX="134.0" layoutY="580.0" mnemonicParsing="false" text="Home" />
+            <Button fx:id="restart" layoutX="347.0" layoutY="580.0" mnemonicParsing="false" text="Restart" />
+            <AnchorPane layoutX="134.0" layoutY="315.0" prefHeight="114.0" prefWidth="275.0">
+               <children>
+                  <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="183.0" stroke="BLACK" strokeType="INSIDE" width="275.0" />
+                  <VBox alignment="CENTER" layoutX="8.0" layoutY="8.0" prefHeight="169.0" prefWidth="256.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Score" textAlignment="CENTER" wrappingWidth="256.0">
+                           <font>
+                              <Font name="DejaVu Sans" size="27.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="finalScore" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="256.0">
+                           <font>
+                              <Font name="DejaVu Sans Bold" size="30.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Best" textAlignment="CENTER" wrappingWidth="256.0">
+                           <font>
+                              <Font name="DejaVu Sans" size="27.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Text>
+                        <Text fx:id="finalBest" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="256.0">
+                           <font>
+                              <Font name="DejaVu Sans Bold" size="30.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <Button fx:id="revive" layoutX="241.0" layoutY="580.0" mnemonicParsing="false" text="Revive" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

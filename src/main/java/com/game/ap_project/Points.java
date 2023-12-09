@@ -22,8 +22,11 @@ public class Points {
         }
     }
 
-    public static int getHighScore(){
+    public static void setGamePoints(int gamePoints) {
+        Points.gamePoints = gamePoints;
+    }
 
+    public static int getHighScore(){
         return highScore;
     }
 
@@ -33,7 +36,7 @@ public class Points {
     }
 
     // Method to get the current total game points
-    public int getGamePoints() {
+    public static int getGamePoints() {
         return gamePoints;
     }
 

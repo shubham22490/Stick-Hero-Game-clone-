@@ -45,6 +45,7 @@ public class HomeController implements Controller {
     @FXML
     private StackPane root;
 
+
     private final String bgSound = Objects.requireNonNull(getClass().getResource("sounds/bg.mp3")).toString();
     private MediaPlayer bg;
     private static int volume = 25;
@@ -62,6 +63,14 @@ public class HomeController implements Controller {
             setVolume(newValue.intValue());
 
         });
+    }
+
+    public StackPane getRoot() {
+        return root;
+    }
+
+    public AnchorPane getHomePane() {
+        return homePane;
     }
 
     @FXML

@@ -10,6 +10,7 @@ public class Cherry {
 
     private static int count = 0;
     private static int y = 0;
+    private static boolean isBelow = false;
 
     // Method to check if a cherry is possible in the width
     private static boolean isCherry() {
@@ -29,30 +30,41 @@ public class Cherry {
         return y;
     }
 
-    public static void addCount(){
+    public static void addCount(GameController controller){
         count++;
+        controller.getCherryCounter().setText(String.valueOf(count));
     }
 
+    public static void removeCount(GameController controller){
+        count -= 3;
+        controller.getCherryCounter().setText(String.valueOf(count));
+    }
+
+    public static int getCount() {
+        return count;
+    }
 
     public static void placeCherry(GameController controller, int prev, int cherry){
         Rectangle pillar = controller.getPillar(prev);
         Rectangle nextPillar = controller.getPillar(prev + 1);
         int gap = (int) (nextPillar.getX() - pillar.getX() - pillar.getWidth()) - (int)controller.getCherry(cherry).getFitWidth();
-//        if(isCherry(){
+        if(isCherry()) {
             Random random = new Random();
             Cherry.getY(controller, cherry);
             int x = random.nextInt(gap) + (int)pillar.getX() + (int)pillar.getWidth();
             controller.getCherry(cherry).setY(y);
             controller.getCherry(cherry).setX(x);
-//            controller.getCherry(cherry).setVisible(true);
-//        }
+        }
     }
 
     public static boolean isCollision(GameController controller){
         ImageView cherry = controller.getCherry(0);
         if(cherry.isVisible()){
             ImageView hero = controller.getHero();
-            return hero.getX() <= cherry.getX() + cherry.getFitWidth() && hero.getX() + hero.getFitWidth() >= cherry.getX();
+            if(hero.getX() <= cherry.getX() + cherry.getFitWidth() && hero.getX() + hero.getFitWidth() >= cherry.getX()){
+                System.out.println(isBelow);
+                return cherry.getY() > 490 == StickFigure.flipCheck();
+            }
         }
         return false;
     }

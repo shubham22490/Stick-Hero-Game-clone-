@@ -1,5 +1,6 @@
 package com.game.ap_project;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
 import java.util.Random;
@@ -45,7 +46,7 @@ public class Towers {
         int width = random.nextInt(MAXWIDTH - MINWIDTH) + MINWIDTH;
         int x = random.nextInt(screenWidth - width - MINGAP - max((int)prevWidth, 100)) + (int)prevWidth + (int)X + MINGAP;
         tower.setX(x);
-        mid.setX(x + width / 2 - 5);
+        mid.setX(x + (double) width / 2 - 5);
         tower.setY(screenHeight - HEIGHT);
         mid.setY(screenHeight - HEIGHT);
         tower.setWidth(width);
@@ -67,6 +68,15 @@ public class Towers {
         tower.setX(0);
         mid.setVisible(false);
         tower.setWidth(100);
+    }
+
+    public static boolean isCollision(GameController controller){
+        Rectangle pillar = controller.getPillar(0);
+        ImageView hero = controller.getHero();
+        if(hero.getX() <= pillar.getX() + pillar.getWidth() && hero.getX() + hero.getFitWidth() >= pillar.getX()){
+            return StickFigure.flipCheck();
+        }
+        return false;
     }
 
 }
