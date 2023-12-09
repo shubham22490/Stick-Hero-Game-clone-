@@ -45,6 +45,11 @@ public class Cherry {
         return count;
     }
 
+    public static void setCount(int count, GameController controller) {
+        Cherry.count = count;
+        controller.getCherryCounter().setText(String.valueOf(count));
+    }
+
     public static void placeCherry(GameController controller, int prev, int cherry){
         Rectangle pillar = controller.getPillar(prev);
         Rectangle nextPillar = controller.getPillar(prev + 1);
